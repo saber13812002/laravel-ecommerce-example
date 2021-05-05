@@ -31,6 +31,16 @@ Website Demo: [https://laravelecommerceexample.ca](https://laravelecommerceexamp
 1. Visit `/admin2` if you want to access the Voyager admin backend. Admin User/Password: `admin@admin.com/password`. Admin Web User/Password: `adminweb@adminweb.com/password`
 1. Visit `/admin` if you want to access the Laravel-Admin.org admin backend. Admin User/Password: `username:admin/password:admin`
 
+## storage folders
+
+1. voyager using config/voyager.php file
+   ```
+   'storage' => [
+   'disk' => env('FILESYSTEM_DRIVER', 'public'),
+   ],
+   ```
+1. https://gist.github.com/saber13812002/75db95cc2ce47067e8730f3ff8e9def5
+
 ## Shopping Cart Package
 
 I originally used the [Crinsane/LaravelShoppingcart](https://github.com/Crinsane/LaravelShoppingcart) package but it is slow to update to the latest versions of Laravel. I now use [hardevine/LaravelShoppingcart](https://github.com/hardevine/LaravelShoppingcart) which is a forked version that updates quicker.
