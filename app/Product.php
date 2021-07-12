@@ -6,9 +6,15 @@ use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
-class Product extends Model
+if (env('ALGOLIA_APP_ID') !== null && env('ALGOLIA_APP_ID') !== '') {
+    class Product_Base extends Model { use Searchable; }
+} else {
+    class Product_Base extends Model {}
+}
+
+class Product extends Product_Base
 {
-    use SearchableTrait, Searchable;
+    use SearchableTrait;
 
     protected $fillable = ['quantity'];
 
