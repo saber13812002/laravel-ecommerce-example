@@ -1,6 +1,7 @@
 .*
 Dockerfile
 docker-compose.yml
+docker/build.sh
 LICENSE
 #vendor
 *.md
