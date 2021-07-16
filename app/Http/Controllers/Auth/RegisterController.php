@@ -7,6 +7,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Throwable;
 
 class RegisterController extends Controller
 {
@@ -62,9 +63,13 @@ class RegisterController extends Controller
      * @param array $data
      * @return \App\User
      */
-    protected function create(array $data)
+    protected function create(array $data): User
     {
-        MyKavenegarHelper::send($data['mobile'], trans('sms.welcome'));
+        try {
+            MyKavenegarHelper::send($data['mobile'], trans('sms.welcome'));
+
+        } catch (Throwable  $exception) {
+        }
 
         return User::create([
             'name' => $data['name'],

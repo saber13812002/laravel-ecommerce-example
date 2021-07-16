@@ -4,13 +4,17 @@
 namespace App\Services\SMS;
 
 
+use Illuminate\Support\Facades\Log;
+
 class MyKavenegarHelper
 {
-    public static function send($phoneNumber,$message)
+    public static function send($phoneNumber, $message)
     {
         $curl = curl_init();
 
         $api_key = env('KAVENEGAR_API_KEY');
+
+        Log::info(' mobile=' . $phoneNumber . ' message=' . $message . ' apikey=' . $api_key);
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'http://api.kavenegar.com/v1/' . $api_key . '/sms/send.json',
