@@ -34,7 +34,8 @@ class MyKavenegarHelper
         $response = curl_exec($curl);
 
         curl_close($curl);
-        echo $response;
+        //echo $response;
+        Log::info(' mobile=' . $response);
 
     }
 }
