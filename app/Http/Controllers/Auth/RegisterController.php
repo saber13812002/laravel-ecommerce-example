@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Services\Bot\MyTelegramHelper;
 use App\Services\SMS\MyKavenegarHelper;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -67,6 +68,11 @@ class RegisterController extends Controller
     {
         try {
             MyKavenegarHelper::send($data['mobile'], trans('sms.welcome'));
+
+            $message = trans('bot.welcome', ['name' => $data['name']]);
+            $chat_id = config('telegrambot.php_group_chat_id');
+            $token = env('PARDISANIA_BOT_TOKEN');
+            MyTelegramHelper::send($message, $chat_id, $token);
 
         } catch (Throwable  $exception) {
         }
