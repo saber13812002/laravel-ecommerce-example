@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Services\Bot\MyTelegramHelper;
+use App\Services\SMS\MyKavenegarHelper;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Throwable;
 
 class RegisterController extends Controller
 {
@@ -42,13 +45,14 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
+            'mobile' => 'required|string|min:11|max:11',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -57,13 +61,25 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\User
      */
-    protected function create(array $data)
+    protected function create(array $data): User
     {
+        try {
+            MyKavenegarHelper::send($data['mobile'], trans('sms.welcome'));
+
+            $message = trans('bot.welcome', ['name' => $data['name']]);
+            $chat_id = config('telegrambot.php_group_chat_id');
+            $token = env('PARDISANIA_BOT_TOKEN');
+            MyTelegramHelper::send($message, $chat_id, $token);
+
+        } catch (Throwable  $exception) {
+        }
+
         return User::create([
             'name' => $data['name'],
+            'mobile' => $data['mobile'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);

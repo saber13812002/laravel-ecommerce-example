@@ -27,7 +27,9 @@
 
                 <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="{{ __('site.name') }}" required autofocus>
 
-                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="{{ __('site.email') }}" required>
+                <input id="mobile" type="number" class="form-control" name="mobile" value="{{ old('mobile') }}" placeholder="{{ __('site.mobile') }}" required autofocus>
+
+                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="{{ __('site.emailAddress') }}" required>
 
                 <input id="password" type="password" class="form-control" name="password" placeholder="{{ __('site.password') }}" required>
 

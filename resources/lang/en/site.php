@@ -44,6 +44,7 @@ return [
     'province'                => 'استان',
     'city'                => 'شهر',
     'phone'                => 'شماره تماس',
+    'mobile'                => 'شماره موبایل',
     'postalCode'                => 'کدپستی',
     'paymentDetails'                => 'جزئیات پرداخت',
     'nameOnCard'                => 'نام شخص صاحب حساب ',
