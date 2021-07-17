@@ -6,6 +6,7 @@ use App\Services\Bot\MyTelegramHelper;
 use App\Services\SMS\MyKavenegarHelper;
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Throwable;
@@ -70,11 +71,10 @@ class RegisterController extends Controller
             MyKavenegarHelper::send($data['mobile'], trans('sms.welcome'));
 
             $message = trans('bot.welcome', ['name' => $data['name']]);
-            $chat_id = config('telegrambot.php_group_chat_id');
-            $token = env('PARDISANIA_BOT_TOKEN');
-            MyTelegramHelper::send($message, $chat_id, $token);
+            MyTelegramHelper::sendMessage($message);
 
         } catch (Throwable  $exception) {
+            Log::warning("RegisterController.php line 70 to 75 error occurred ");
         }
 
         return User::create([

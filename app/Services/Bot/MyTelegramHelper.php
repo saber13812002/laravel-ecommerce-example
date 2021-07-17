@@ -29,7 +29,12 @@ class MyTelegramHelper
 
         curl_close($curl);
         //echo $response;
+    }
 
-
+    public static function sendMessage($message)
+    {
+        $chat_id = config('telegrambot.php_group_chat_id');
+        $token = env('PARDISANIA_BOT_TOKEN');
+        MyTelegramHelper::send($message, $chat_id, $token);
     }
 }

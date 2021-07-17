@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Order;
 use App\Product;
 use App\OrderProduct;
-use App\Mail\OrderPlaced;
+//use App\Mail\OrderPlaced;
+use App\Services\Bot\MyTelegramHelper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+//use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\CheckoutRequest;
 use Gloudemans\Shoppingcart\Facades\Cart;
+
 // use Cartalyst\Stripe\Laravel\Facades\Stripe;
 // use Cartalyst\Stripe\Exception\CardErrorException;
 
@@ -56,7 +58,7 @@ class CheckoutController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(CheckoutRequest $request)
@@ -67,7 +69,7 @@ class CheckoutController extends Controller
         }
 
         $contents = Cart::content()->map(function ($item) {
-            return $item->model->slug.', '.$item->qty;
+            return $item->model->slug . ', ' . $item->qty;
         })->values()->toJson();
 
         try {
@@ -104,7 +106,7 @@ class CheckoutController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function paypalCheckout(Request $request)
@@ -136,7 +138,7 @@ class CheckoutController extends Controller
         if ($result->success) {
             $order = $this->addToOrdersTablesPaypal(
                 $transaction->paypal['payerEmail'],
-                $transaction->paypal['payerFirstName'].' '.$transaction->paypal['payerLastName'],
+                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
                 null
             );
 
@@ -153,11 +155,11 @@ class CheckoutController extends Controller
         } else {
             $order = $this->addToOrdersTablesPaypal(
                 $transaction->paypal['payerEmail'],
-                $transaction->paypal['payerFirstName'].' '.$transaction->paypal['payerLastName'],
+                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
                 $result->message
             );
 
-            return back()->withErrors('An error occurred with the message: '.$result->message);
+            return back()->withErrors('An error occurred with the message: ' . $result->message);
         }
     }
 
@@ -189,6 +191,12 @@ class CheckoutController extends Controller
                 'product_id' => $item->model->id,
                 'quantity' => $item->qty,
             ]);
+
+            if ($item->model->id == 4) {
+                $message = "کلاس آموزشی پی اچ پی توسط " . auth()->user()->name . " سفارش داده شد";
+                MyTelegramHelper::sendMessage($message);
+            }
+
         }
 
         return $order;
@@ -221,7 +229,7 @@ class CheckoutController extends Controller
 
         return $order;
     }
- 
+
 
     protected function decreaseQuantities()
     {
