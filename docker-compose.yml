@@ -4,34 +4,47 @@ services:
         image: nginx:stable
         restart: always
         ports:
-            - 8000:80
+            - 8000:80 # you can change the number before : sign to make your host listening for nginx on another port
         depends_on:
             - shop
         volumes:
-            - shop:/var/www/html
-            - ./.ci/nginx.conf:/etc/nginx/conf.d/default.conf
+            - ./.ci/nginx.conf:/etc/nginx/conf.d/default.conf # You can change the source file's content for using on production
+            - shop-public:/var/www/html/public
 
     shop:
-        image: a3dmorteza/laravel-ecommerce-example
+        image: a3dmorteza/laravel-ecommerce-example:${APP_ENV:-production} # available tags are: 'production', 'development', 'local'
+        # if you want to build your own image from the source, you must comment the above "image" key and then uncomment the below "build" key and its children keys
+        # build:
+        #     context: .
+        #     args:
+        #         - APP_ENV=${APP_ENV:-production}
         restart: always
         env_file:
             - .env
         depends_on:
             - shop-db
         volumes:
-            - shop:/var/www/html
-            - ./.ci/fpm.conf:/usr/local/etc/php-fpm.d/zz-custom.conf
-            - ./app:/var/www/html/app
-            - ./docker-entrypoint.sh:/docker-entrypoint.sh
+            - ./.ci/fpm.conf:/usr/local/etc/php-fpm.d/zz-custom.conf # You can change the source file's content for using on production
+            # on development machine you can uncomment below lines to bind the source directories onto the container to see changes effects immediately
+            # - ./app:/var/www/html/app
+            # - ./routes:/var/www/html/routes
+            - shop-public:/var/www/html/public
+            - shop-storage:/var/www/html/storage
+        # you can comment below lines on production env but it's not necessary
+        environment:
+            XDEBUG_CONFIG: client_host=host.docker.internal # you can modify xdebug settings according to its official documents
+        extra_hosts:
+            host.docker.internal: host-gateway # a bugfix just for linux users ;)
+            
     shop-db:
         image: mysql
         command: --default-authentication-plugin=mysql_native_password
         restart: always
         environment:
-            - MYSQL_ROOT_PASSWORD=root-secret
-            - MYSQL_DATABASE=shop_db
-            - MYSQL_USER=user
-            - MYSQL_PASSWORD=user-secret
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
         volumes:
             - shop-db:/var/lib/mysql
             
@@ -39,10 +52,16 @@ services:
         image: phpmyadmin
         restart: always
         ports:
-            - 8080:80
+            - 8080:80 # you can change the number before : sign to make your host listening for phpmyadmin on another port
         environment:
-            - PMA_ARBITRARY=1
+            - PMA_HOST=${DB_HOST}
+            - PMA_USER=${DB_USERNAME}
+            - PMA_PASSWORD=${DB_PASSWORD}
+        profiles: # only if (APP_ENV=local|development) run this service (based on the last-line of .env file)'
+            - local
+            - development
 
 volumes:
     shop-db:
-    shop:
+    shop-storage:
+    shop-public:
