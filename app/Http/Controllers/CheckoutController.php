@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Order;
 use App\Product;
 use App\OrderProduct;
+
 //use App\Mail\OrderPlaced;
 use App\Services\Bot\MyTelegramHelper;
 use Illuminate\Http\Request;
+
 //use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\CheckoutRequest;
 use Gloudemans\Shoppingcart\Facades\Cart;
@@ -193,7 +195,7 @@ class CheckoutController extends Controller
             ]);
 
             if ($item->model->id == 4) {
-                $message = "کلاس آموزشی پی اچ پی توسط " . auth()->user()->name . " سفارش داده شد";
+                $message = "کلاس آموزشی پی اچ پی توسط " . auth()->user() ? auth()->user()->name : " کاربر مهمان " . " سفارش داده شد";
                 MyTelegramHelper::sendMessage($message);
             }
 
