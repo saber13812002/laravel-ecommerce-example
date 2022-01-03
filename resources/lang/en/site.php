@@ -21,8 +21,8 @@ return [
     'apply'                => 'اعمال',
     'shippingIsFreeBecauseWereAwesomeLikeThatAlsoBecauseThatsAdditionalStuffIDontFeelLikeFiguringOut' => 'ارسال برای شما رایگان خواهد بود',
     'subTotal'                => 'جمع',
-    'tax'                => 'مالیات ارزش افزوده',
-    'total'                => 'مجموع',
+    'tax'                => 'مالیات بر ارزش افزوده',
+    'total'                => 'جمع کل',
     'proceedToCheckout'                => 'ادامه جهت تسویه حساب',
     'returningCustomer'                => 'من قبلا حساب دارم',
     'newCustomer'                => 'میخواهم عضو شوم',
@@ -44,6 +44,7 @@ return [
     'province'                => 'استان',
     'city'                => 'شهر',
     'phone'                => 'شماره تماس',
+    'mobile'                => 'شماره موبایل',
     'postalCode'                => 'کدپستی',
     'paymentDetails'                => 'جزئیات پرداخت',
     'nameOnCard'                => 'نام شخص صاحب حساب ',
@@ -77,6 +78,7 @@ return [
         'details'                => 'نتایج',
         'description'                => 'توضیحات',
         'price'                => 'قیمت',
+        'categories'            => 'دسته‌ها'
     ],
     
     'forgetpassword'           => [
@@ -103,7 +105,7 @@ return [
     'menu_titles'           => [
         'signup'                => 'عضویت',
         'login'                => 'ورود',
-        'logout'                => 'خروح',
+        'logout'                => 'خروج',
         'myaccount'                => 'پنل من',
         'cart'                => 'سبد خرید',
         'blog'                => 'وبلاگ',
@@ -138,6 +140,19 @@ return [
         'button1'                => 'موارد جدید',
         'button2'                => 'لیست موارد',
         'loadmore'                => 'نمایش موارد بیشتر',
+    ],
+    'user_page' => [
+        'my_orders' => 'سفارش‌های من',
+        'my_profile' => 'پروفایل من',
+        'keep_current_password' => 'اگر می خواهید کلمه عبور شما تغییر نکند، این قسمت را خالی بگذارید',
+        'update_profile' => 'اعمال تغییرات',
+        'order_placed_at' => 'زمان ثبت',
+        'order_id' => 'شناسه سفارش',
+        'order_total' => 'مبلغ کل',
+        'order_details' => 'جزئیات سفارش',
+        'order_invoice' => 'صورتحساب',
+        'order_quantity' => 'تعداد',
+        'order_items' => 'اقلام سفارش'
     ]
 
 ];

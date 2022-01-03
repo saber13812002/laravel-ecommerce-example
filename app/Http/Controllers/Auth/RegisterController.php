@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Services\Bot\MyTelegramHelper;
+use App\Services\SMS\MyKavenegarHelper;
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Throwable;
 
 class RegisterController extends Controller
 {
@@ -42,13 +46,14 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
+            'mobile' => 'required|string|min:11|max:11',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -57,13 +62,24 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\User
      */
-    protected function create(array $data)
+    protected function create(array $data): User
     {
+        try {
+            MyKavenegarHelper::send($data['mobile'], trans('sms.welcome'));
+
+            $message = trans('bot.welcome', ['name' => $data['name']]);
+            MyTelegramHelper::sendMessage($message);
+
+        } catch (Throwable  $exception) {
+            Log::warning("RegisterController.php line 70 to 75 error occurred ");
+        }
+
         return User::create([
             'name' => $data['name'],
+            'mobile' => $data['mobile'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
