@@ -36,6 +36,7 @@ class ProductController extends AdminController
         $grid->column('quantity', __('Quantity'));
         $grid->column('image', __('Image'));
         $grid->column('images', __('Images'));
+        $grid->column('bookable', __('Bookable'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -62,6 +63,7 @@ class ProductController extends AdminController
         $show->field('quantity', __('Quantity'));
         $show->field('image', __('Image'));
         $show->field('images', __('Images'));
+        $show->field('bookable', __('Bookable'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -86,6 +88,7 @@ class ProductController extends AdminController
         $form->number('quantity', __('Quantity'))->default(10);
         $form->image('image', __('Image'));
         $form->textarea('images', __('Images'));
+        $form->switch('bookable', __('Bookable'));
 
         return $form;
     }

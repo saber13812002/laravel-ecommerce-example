@@ -7,6 +7,7 @@ Route::get('/', 'LandingPageController@index')->name('landing-page');
 Route::get('/post/{slug}', 'BlogController@show')->name('post.show');
 
 Route::get('/shop', 'ShopController@index')->name('shop.index');
+Route::get('/shop/bookable', 'ShopController@bookable')->name('shop.bookable');
 Route::get('/shop/{product}', 'ShopController@show')->name('shop.show');
 
 Route::get('/cart', 'CartController@index')->name('cart.index');

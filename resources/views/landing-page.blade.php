@@ -80,6 +80,32 @@
 
             </div> <!-- end featured-section -->
 
+            <div class="featured-section">
+
+                <div class="container">
+                    <h1 class="text-center">{{ __('site.mainpage.body.bookable.title') }}</h1>
+
+                    <p class="section-description">{{ trans('site.mainpage.body.description') }}</p>
+
+                    <div class="products text-center">
+                        @foreach ($bookableProducts as $product)
+                            <div class="product">
+                                <a href="{{ route('shop.show', $product->slug) }}"><img src="{{ productImage($product->image) }}" alt="product"></a>
+                                <a href="{{ route('shop.show', $product->slug) }}"><div class="product-name">{{ $product->name }}</div></a>
+                                <div class="product-price">{{ $product->presentPrice() }} تومان</div>
+                            </div>
+                        @endforeach
+
+                    </div> <!-- end products -->
+
+                    <div class="text-center button-container">
+                        <a href="{{ route('shop.bookable') }}" class="button">{{ __('site.mainpage.body.loadmore') }}</a>
+                    </div>
+
+                </div> <!-- end container -->
+
+            </div> <!-- end featured-section -->
+
             <blog-posts></blog-posts>
 
             @include('partials.footer')
