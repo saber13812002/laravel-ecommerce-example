@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Database\Seeders;
 use Database\Seeders\DataRowsTableSeederCustom;
 use Database\Seeders\DataTypesTableSeederCustom;
 use Database\Seeders\MenuItemsTableSeederCustom;
@@ -16,7 +15,6 @@ use Database\Seeders\UsersTableSeederCustom;
 use Database\Seeders\VoyagerDatabaseSeeder;
 use Database\Seeders\VoyagerDummyDatabaseSeeder;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 
 class EcommerceInstall extends Command
