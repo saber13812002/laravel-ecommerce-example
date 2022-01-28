@@ -21,6 +21,7 @@
         "laravel/scout": "^8.0",
         "laravel/tinker": "^2.0",
         "nicolaslopezj/searchable": "^1.13.0",
+        "rinvex/laravel-bookings": "^5.0",
         "tcg/voyager": "1.5.2.*"
     },
     "require-dev": {
