@@ -1,9 +1,10 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use TCG\Voyager\Models\Role;
 
-class RolesTableSeeder extends Seeder
+class RolesTableSeederCustom extends Seeder
 {
     /**
      * Auto generated seed file.
@@ -21,6 +22,13 @@ class RolesTableSeeder extends Seeder
         if (!$role->exists) {
             $role->fill([
                     'display_name' => 'Normal User',
+                ])->save();
+        }
+
+        $role = Role::firstOrNew(['name' => 'adminweb']);
+        if (!$role->exists) {
+            $role->fill([
+                    'display_name' => 'Admin Web',
                 ])->save();
         }
     }
