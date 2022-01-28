@@ -34,18 +34,18 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.index');
         }
 
-        $gateway = new \Braintree\Gateway([
-            'environment' => config('services.braintree.environment'),
-            'merchantId' => config('services.braintree.merchantId'),
-            'publicKey' => config('services.braintree.publicKey'),
-            'privateKey' => config('services.braintree.privateKey')
-        ]);
+//        $gateway = new \Braintree\Gateway([
+//            'environment' => config('services.braintree.environment'),
+//            'merchantId' => config('services.braintree.merchantId'),
+//            'publicKey' => config('services.braintree.publicKey'),
+//            'privateKey' => config('services.braintree.privateKey')
+//        ]);
 
-        try {
-            $paypalToken = $gateway->ClientToken()->generate();
-        } catch (\Exception $e) {
+//        try {
+//            $paypalToken = $gateway->ClientToken()->generate();
+//        } catch (\Exception $e) {
             $paypalToken = null;
-        }
+//        }
 
         return view('checkout')->with([
             'paypalToken' => $paypalToken,
@@ -118,51 +118,51 @@ class CheckoutController extends Controller
             return back()->withErrors('Sorry! One of the items in your cart is no longer avialble.');
         }
 
-        $gateway = new \Braintree\Gateway([
-            'environment' => config('services.braintree.environment'),
-            'merchantId' => config('services.braintree.merchantId'),
-            'publicKey' => config('services.braintree.publicKey'),
-            'privateKey' => config('services.braintree.privateKey')
-        ]);
+//        $gateway = new \Braintree\Gateway([
+//            'environment' => config('services.braintree.environment'),
+//            'merchantId' => config('services.braintree.merchantId'),
+//            'publicKey' => config('services.braintree.publicKey'),
+//            'privateKey' => config('services.braintree.privateKey')
+//        ]);
 
         $nonce = $request->payment_method_nonce;
 
-        $result = $gateway->transaction()->sale([
-            'amount' => round(getNumbers()->get('newTotal') / 100, 2),
-            'paymentMethodNonce' => $nonce,
-            'options' => [
-                'submitForSettlement' => true
-            ]
-        ]);
+//        $result = $gateway->transaction()->sale([
+//            'amount' => round(getNumbers()->get('newTotal') / 100, 2),
+//            'paymentMethodNonce' => $nonce,
+//            'options' => [
+//                'submitForSettlement' => true
+//            ]
+//        ]);
 
-        $transaction = $result->transaction;
+//        $transaction = $result->transaction;
 
-        if ($result->success) {
-            $order = $this->addToOrdersTablesPaypal(
-                $transaction->paypal['payerEmail'],
-                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
-                null
-            );
-
-            // TODO: config mail server
-            // Mail::send(new OrderPlaced($order));
-
-            // decrease the quantities of all the products in the cart
+//        if ($result->success) {
+//            $order = $this->addToOrdersTablesPaypal(
+//                $transaction->paypal['payerEmail'],
+//                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
+//                null
+//            );
+//
+//            // TODO: config mail server
+//            // Mail::send(new OrderPlaced($order));
+//
+//            // decrease the quantities of all the products in the cart
             $this->decreaseQuantities();
-
+//
             Cart::instance('default')->destroy();
             session()->forget('coupon');
-
+//
             return redirect()->route('confirmation.index')->with('success_message', 'Thank you! Your payment has been successfully accepted!');
-        } else {
-            $order = $this->addToOrdersTablesPaypal(
-                $transaction->paypal['payerEmail'],
-                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
-                $result->message
-            );
+//        } else {
+//            $order = $this->addToOrdersTablesPaypal(
+//                $transaction->paypal['payerEmail'],
+//                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
+//                $result->message
+//            );
 
-            return back()->withErrors('An error occurred with the message: ' . $result->message);
-        }
+//            return back()->withErrors('An error occurred with the message: ' . $result->message);
+//        }
     }
 
     protected function addToOrdersTables($request, $error)
