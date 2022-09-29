@@ -196,7 +196,7 @@ class CheckoutController extends Controller
 
             if ($item->model->id == 4) {
                 $anonymouseUser = " کاربر مهمان ";
-                $message = "کلاس آموزشی پی اچ پی توسط " . auth()->user() ? (auth()->user()->name ? : $anonymouseUser) : $anonymouseUser . " سفارش داده شد";
+                $message = "کلاس آموزشی پی اچ پی توسط " . auth()->user() ? (auth()->user()->name ?? $anonymouseUser) : $anonymouseUser . " سفارش داده شد";
                 MyTelegramHelper::sendMessage($message);
             }
 
