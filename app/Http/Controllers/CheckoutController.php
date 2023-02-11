@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\Eitaa;
 use App\Order;
 use App\Product;
 use App\OrderProduct;
@@ -44,7 +45,7 @@ class CheckoutController extends Controller
 //        try {
 //            $paypalToken = $gateway->ClientToken()->generate();
 //        } catch (\Exception $e) {
-            $paypalToken = null;
+        $paypalToken = null;
 //        }
 
         return view('checkout')->with([
@@ -91,6 +92,11 @@ class CheckoutController extends Controller
 
             $order = $this->addToOrdersTables($request, null);
             // Mail::send(new OrderPlaced($order));
+
+
+            $botToken = config('eitaayar.log_group.token');
+            $chatId = config('eitaayar.log_group.chat_id');
+            Eitaa::sendMessage($botToken, $chatId, __('site.bot.message.checkout'));
 
             // decrease the quantities of all the products in the cart
             $this->decreaseQuantities();
@@ -148,12 +154,12 @@ class CheckoutController extends Controller
 //            // Mail::send(new OrderPlaced($order));
 //
 //            // decrease the quantities of all the products in the cart
-            $this->decreaseQuantities();
+        $this->decreaseQuantities();
 //
-            Cart::instance('default')->destroy();
-            session()->forget('coupon');
+        Cart::instance('default')->destroy();
+        session()->forget('coupon');
 //
-            return redirect()->route('confirmation.index')->with('success_message', 'Thank you! Your payment has been successfully accepted!');
+        return redirect()->route('confirmation.index')->with('success_message', 'Thank you! Your payment has been successfully accepted!');
 //        } else {
 //            $order = $this->addToOrdersTablesPaypal(
 //                $transaction->paypal['payerEmail'],
@@ -197,6 +203,19 @@ class CheckoutController extends Controller
             if ($item->model->id == 4) {
                 $message = "کلاس آموزشی پی اچ پی توسط " . auth()->user() ? auth()->user()->name : " کاربر مهمان " . " سفارش داده شد";
                 MyTelegramHelper::sendMessage($message);
+
+                $botToken = config('eitaayar.log_group.token');
+                $chatId = config('eitaayar.log_group.chat_id');
+                Eitaa::sendMessage($botToken, $chatId, $message);
+            }
+
+            if ($item->model->id == 13) {
+                $message = "ویرگول ایتا توسط " . auth()->user() ? auth()->user()->name : " کاربر مهمان " . " سفارش داده شد";
+                MyTelegramHelper::sendMessage($message);
+
+                $botToken = config('eitaayar.log_group.token');
+                $chatId = config('eitaayar.log_group.chat_id');
+                Eitaa::sendMessage($botToken, $chatId, $message);
             }
 
         }

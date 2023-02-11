@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Kavenegar;
 
 
+use App\Http\Services\Eitaa;
 use App\Services\Bot\MyTelegramHelper;
 use App\User;
 use Illuminate\Http\Request;
@@ -27,6 +28,11 @@ class SmsSubscribe
 
         $message = trans('bot.webhook', ['name' => $name]);
         MyTelegramHelper::sendMessage($message);
+
+
+        $botToken = config('eitaayar.log_group.token');
+        $chatId = config('eitaayar.log_group.chat_id');
+        Eitaa::sendMessage($botToken, $chatId, $message);
 
         return response($request);
     }
