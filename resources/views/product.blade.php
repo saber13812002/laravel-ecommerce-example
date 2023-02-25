@@ -59,6 +59,14 @@
             <div>{!! $stockLevel !!}</div>
             <div class="product-section-price">{{ $product->presentPrice() }} تومان</div>
 
+            @if ($product->bookable)
+            <p>
+                {{ config('services.reserve.dates') }}
+                <br>
+                {{ config('services.reserve.times') }}
+            </p>
+            @endif
+
             <p>
                 {!! $product->description !!}
             </p>
