@@ -22,11 +22,11 @@
         "laravel/tinker": "^2.0",
         "nicolaslopezj/searchable": "^1.13.0",
         "rinvex/laravel-bookings": "^5.0",
+        "guzzlehttp/guzzle": "^6.5.5|^7.0.1",
         "tcg/voyager": "1.5.2.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.9.2",
-        "laravel/dusk": "7.x-dev",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "^9.0"
     },

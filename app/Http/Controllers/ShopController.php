@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ShopController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
@@ -46,7 +47,7 @@ class ShopController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function bookable()
     {
@@ -82,8 +83,8 @@ class ShopController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $slug
-     * @return \Illuminate\Http\Response
+     * @param string $slug
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function show($slug)
     {
@@ -93,11 +94,27 @@ class ShopController extends Controller
             ->mightAlsoLike()->get();
 
         $stockLevel = getStockLevel($product->quantity);
+//        dd($product->fire_book_id);
+        $jsonData = null;
+        if ($product->fire_book_id) {
+            $url = config('services.reserve.dates') . $product->fire_book_id;
+//            dd($url);
+            $response = Http::get($url);
+            $jsonData = $response->json();
+//            dd($jsonData);
+        }
+//        dd($jsonData);
+//        foreach ($jsonData as $j)
+//        {
+//            dump($j['date']);
+//        }
 
         return view('product')->with([
             'product' => $product,
             'stockLevel' => $stockLevel,
             'mightAlsoLike' => $mightAlsoLike,
+            'fireBookId' => $product->firebookId,
+            'dates' => $jsonData ?? null
         ]);
     }
 

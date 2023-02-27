@@ -16,6 +16,7 @@ return [
 
     'reserve' => [
         'dates' => env('URL_DATES_API_RESEARVE',"please config dates api"),
+
         'times' => env('URL_TIMES_API_RESEARVE',"please config times api"),
     ],
 
