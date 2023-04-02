@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Services\Eitaa;
 use App\Services\Bot\MyTelegramHelper;
 use App\Services\SMS\MyKavenegarHelper;
 use App\User;
@@ -72,6 +73,12 @@ class RegisterController extends Controller
 
             $message = trans('bot.welcome', ['name' => $data['name']]);
             MyTelegramHelper::sendMessage($message);
+
+
+            $botToken = config('eitaayar.log_group.token');
+            $chatId = config('eitaayar.log_group.chat_id');
+            Eitaa::sendMessage($botToken, $chatId, $message);
+
 
         } catch (Throwable  $exception) {
             Log::warning("RegisterController.php line 70 to 75 error occurred ");

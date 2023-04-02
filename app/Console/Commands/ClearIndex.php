@@ -24,15 +24,15 @@ class ClearIndex extends Command
      */
     public function handle()
     {
-        $class = $this->argument('model');
-        $model = new $class;
-        $algolia = \Algolia\AlgoliaSearch\SearchClient::create(
-            config('scout.algolia.id'),
-            config('scout.algolia.secret')
-        );
-        $index = $algolia->initIndex($model->searchableAs());
+//        $class = $this->argument('model');
+//        $model = new $class;
+//        $algolia = \Algolia\AlgoliaSearch\SearchClient::create(
+//            config('scout.algolia.id'),
+//            config('scout.algolia.secret')
+//        );
+//        $index = $algolia->initIndex($model->searchableAs());
         // Remember this is an asynchronous operation in Algolia
-        $index->delete();
-        $this->info('Index ' . $model->searchableAs() . ' cleared');
+//        $index->delete();
+//        $this->info('Index ' . $model->searchableAs() . ' cleared');
     }
 }

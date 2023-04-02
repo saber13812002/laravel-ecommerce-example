@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\Eitaa;
 use App\Order;
 use App\Product;
 use App\OrderProduct;
@@ -34,18 +35,18 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.index');
         }
 
-        $gateway = new \Braintree\Gateway([
-            'environment' => config('services.braintree.environment'),
-            'merchantId' => config('services.braintree.merchantId'),
-            'publicKey' => config('services.braintree.publicKey'),
-            'privateKey' => config('services.braintree.privateKey')
-        ]);
+//        $gateway = new \Braintree\Gateway([
+//            'environment' => config('services.braintree.environment'),
+//            'merchantId' => config('services.braintree.merchantId'),
+//            'publicKey' => config('services.braintree.publicKey'),
+//            'privateKey' => config('services.braintree.privateKey')
+//        ]);
 
-        try {
-            $paypalToken = $gateway->ClientToken()->generate();
-        } catch (\Exception $e) {
-            $paypalToken = null;
-        }
+//        try {
+//            $paypalToken = $gateway->ClientToken()->generate();
+//        } catch (\Exception $e) {
+        $paypalToken = null;
+//        }
 
         return view('checkout')->with([
             'paypalToken' => $paypalToken,
@@ -92,6 +93,11 @@ class CheckoutController extends Controller
             $order = $this->addToOrdersTables($request, null);
             // Mail::send(new OrderPlaced($order));
 
+
+            $botToken = config('eitaayar.log_group.token');
+            $chatId = config('eitaayar.log_group.chat_id');
+            Eitaa::sendMessage($botToken, $chatId, __('site.bot.message.checkout'));
+
             // decrease the quantities of all the products in the cart
             $this->decreaseQuantities();
 
@@ -118,51 +124,51 @@ class CheckoutController extends Controller
             return back()->withErrors('Sorry! One of the items in your cart is no longer avialble.');
         }
 
-        $gateway = new \Braintree\Gateway([
-            'environment' => config('services.braintree.environment'),
-            'merchantId' => config('services.braintree.merchantId'),
-            'publicKey' => config('services.braintree.publicKey'),
-            'privateKey' => config('services.braintree.privateKey')
-        ]);
+//        $gateway = new \Braintree\Gateway([
+//            'environment' => config('services.braintree.environment'),
+//            'merchantId' => config('services.braintree.merchantId'),
+//            'publicKey' => config('services.braintree.publicKey'),
+//            'privateKey' => config('services.braintree.privateKey')
+//        ]);
 
         $nonce = $request->payment_method_nonce;
 
-        $result = $gateway->transaction()->sale([
-            'amount' => round(getNumbers()->get('newTotal') / 100, 2),
-            'paymentMethodNonce' => $nonce,
-            'options' => [
-                'submitForSettlement' => true
-            ]
-        ]);
+//        $result = $gateway->transaction()->sale([
+//            'amount' => round(getNumbers()->get('newTotal') / 100, 2),
+//            'paymentMethodNonce' => $nonce,
+//            'options' => [
+//                'submitForSettlement' => true
+//            ]
+//        ]);
 
-        $transaction = $result->transaction;
+//        $transaction = $result->transaction;
 
-        if ($result->success) {
-            $order = $this->addToOrdersTablesPaypal(
-                $transaction->paypal['payerEmail'],
-                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
-                null
-            );
+//        if ($result->success) {
+//            $order = $this->addToOrdersTablesPaypal(
+//                $transaction->paypal['payerEmail'],
+//                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
+//                null
+//            );
+//
+//            // TODO: config mail server
+//            // Mail::send(new OrderPlaced($order));
+//
+//            // decrease the quantities of all the products in the cart
+        $this->decreaseQuantities();
+//
+        Cart::instance('default')->destroy();
+        session()->forget('coupon');
+//
+        return redirect()->route('confirmation.index')->with('success_message', 'Thank you! Your payment has been successfully accepted!');
+//        } else {
+//            $order = $this->addToOrdersTablesPaypal(
+//                $transaction->paypal['payerEmail'],
+//                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
+//                $result->message
+//            );
 
-            // TODO: config mail server
-            // Mail::send(new OrderPlaced($order));
-
-            // decrease the quantities of all the products in the cart
-            $this->decreaseQuantities();
-
-            Cart::instance('default')->destroy();
-            session()->forget('coupon');
-
-            return redirect()->route('confirmation.index')->with('success_message', 'Thank you! Your payment has been successfully accepted!');
-        } else {
-            $order = $this->addToOrdersTablesPaypal(
-                $transaction->paypal['payerEmail'],
-                $transaction->paypal['payerFirstName'] . ' ' . $transaction->paypal['payerLastName'],
-                $result->message
-            );
-
-            return back()->withErrors('An error occurred with the message: ' . $result->message);
-        }
+//            return back()->withErrors('An error occurred with the message: ' . $result->message);
+//        }
     }
 
     protected function addToOrdersTables($request, $error)
@@ -198,6 +204,19 @@ class CheckoutController extends Controller
                 $anonymouseUser = " کاربر مهمان ";
                 $message = "کلاس آموزشی پی اچ پی توسط " . auth()->user() ? (auth()->user()->name ?? $anonymouseUser) : $anonymouseUser . " سفارش داده شد";
                 MyTelegramHelper::sendMessage($message);
+
+                $botToken = config('eitaayar.log_group.token');
+                $chatId = config('eitaayar.log_group.chat_id');
+                Eitaa::sendMessage($botToken, $chatId, $message);
+            }
+
+            if ($item->model->id == 13) {
+                $message = "ویرگول ایتا توسط " . auth()->user() ? auth()->user()->name : " کاربر مهمان " . " سفارش داده شد";
+                MyTelegramHelper::sendMessage($message);
+
+                $botToken = config('eitaayar.log_group.token');
+                $chatId = config('eitaayar.log_group.chat_id');
+                Eitaa::sendMessage($botToken, $chatId, $message);
             }
 
         }

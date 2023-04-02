@@ -16,9 +16,24 @@ class LandingPageController extends Controller
      */
     public function index()
     {
-        $products = Product::where('featured', true)->take(8)->inRandomOrder()->get();
+        $products = Product::where('featured', true)
+            ->where('bookable', false)
+            ->take(8)
+            ->inRandomOrder()
+            ->get();
+
+        $bookableProducts = Product::where('featured', true)
+            ->where('bookable', true)
+            ->take(8)
+            ->inRandomOrder()
+            ->get();
+
         $items = MenuItem::where('menu_id', 2)->take(8)->get();
         // dd($items);
-        return view('landing-page')->with(['products' => $products, 'items' => $items]);
+        return view('landing-page')->with([
+            'products' => $products,
+            'bookableProducts' => $bookableProducts,
+            'items' => $items
+        ]);
     }
 }

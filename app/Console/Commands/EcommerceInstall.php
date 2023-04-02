@@ -2,6 +2,18 @@
 
 namespace App\Console\Commands;
 
+use Database\Seeders\DataRowsTableSeederCustom;
+use Database\Seeders\DataTypesTableSeederCustom;
+use Database\Seeders\MenuItemsTableSeederCustom;
+use Database\Seeders\MenusTableSeederCustom;
+use Database\Seeders\PermissionRoleTableSeeder;
+use Database\Seeders\PermissionRoleTableSeederCustom;
+use Database\Seeders\PermissionsTableSeederCustom;
+use Database\Seeders\RolesTableSeederCustom;
+use Database\Seeders\SettingsTableSeederCustom;
+use Database\Seeders\UsersTableSeederCustom;
+use Database\Seeders\VoyagerDatabaseSeeder;
+use Database\Seeders\VoyagerDummyDatabaseSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
@@ -71,66 +83,68 @@ class EcommerceInstall extends Command
                 '--force' => true,
             ]);
         } catch (\Exception $e) {
-            $this->error('Algolia credentials incorrect. Your products table is NOT seeded correctly. If you are not using Algolia, remove Laravel\Scout\Searchable from App\Product');
+            //$this->error('-Algolia credentials incorrect. Your products table is NOT seeded correctly. If you are not using Algolia, remove Laravel\Scout\Searchable from App\Product');
+            $this->info('Algolia Disabled');
         }
 
+        // php artisan db:seed --class=VoyagerDatabaseSeeder
         $this->call('db:seed', [
-            '--class' => 'VoyagerDatabaseSeeder',
+            '--class' => VoyagerDatabaseSeeder::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'VoyagerDummyDatabaseSeeder',
+            '--class' => VoyagerDummyDatabaseSeeder::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'DataTypesTableSeederCustom',
+            '--class' => DataTypesTableSeederCustom::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'DataRowsTableSeederCustom',
+            '--class' => DataRowsTableSeederCustom::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'MenusTableSeederCustom',
+            '--class' => MenusTableSeederCustom::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'MenuItemsTableSeederCustom',
+            '--class' => MenuItemsTableSeederCustom::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'RolesTableSeederCustom',
+            '--class' => RolesTableSeederCustom::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'PermissionsTableSeederCustom',
+            '--class' => PermissionsTableSeederCustom::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'PermissionRoleTableSeeder',
+            '--class' => PermissionRoleTableSeeder::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'PermissionRoleTableSeederCustom',
+            '--class' => PermissionRoleTableSeederCustom::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'UsersTableSeederCustom',
+            '--class' => UsersTableSeederCustom::class,
             '--force' => true,
         ]);
 
         $this->call('db:seed', [
-            '--class' => 'SettingsTableSeederCustom',
+            '--class' => SettingsTableSeederCustom::class,
             '--force' => true,
         ]);
 
@@ -143,7 +157,8 @@ class EcommerceInstall extends Command
                 'model' => 'App\\Product',
             ]);
         } catch (\Exception $e) {
-            $this->error('Algolia credentials incorrect. Check your .env file. Make sure ALGOLIA_APP_ID and ALGOLIA_SECRET are correct.');
+            //$this->error('Algolia credentials incorrect. Check your .env file. Make sure ALGOLIA_APP_ID and ALGOLIA_SECRET are correct.');
+            $this->info('Algolia Disabled (search this phrase in your code)');
         }
 
         $this->info('Dummy data installed');

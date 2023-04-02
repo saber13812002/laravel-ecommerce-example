@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Services\Eitaa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -63,6 +64,12 @@ class LoginController extends Controller
                 session()->put('cart.' . $identifier, $rows);
             });
         }
+
+
+        $message = "loggoff";
+        $botToken = config('eitaayar.log_group.token');
+        $chatId = config('eitaayar.log_group.chat_id');
+        Eitaa::sendMessage($botToken, $chatId, $message);
 
         return redirect()->to($destination);
     }

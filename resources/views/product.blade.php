@@ -59,6 +59,22 @@
             <div>{!! $stockLevel !!}</div>
             <div class="product-section-price">{{ $product->presentPrice() }} تومان</div>
 
+            @if ($product->bookable && $product->fire_book_id)
+            <p>
+                {{ config('services.reserve.dates') }}
+
+                <br>
+
+                @foreach($dates as $date)
+                    {{ $date['date'] }}
+
+                    <br>
+                @endforeach
+                {{ config('services.reserve.times') }}
+
+            </p>
+            @endif
+
             <p>
                 {!! $product->description !!}
             </p>
